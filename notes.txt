@@ -14,3 +14,15 @@
     - Urls, remove, no correlation, even the number of urls
     - Mentions, no one mentions anyone
     - Statuses and links seem pretty correlated, thats a pb, stauses count will be removed since it has less correlation, perf decrease, will not remove finally
+
+
+- Baseline Model Finetuning 
+    - BGR: 
+        - Use HistGradientBoostingRegressor instead, (faster for larger training sets)
+        - 6.5 error score
+    - RFR:
+        - 7.27 error score
+    - Linear R
+        - 11.23 error score
+
+    Conclusions: Investigate further diff between BGR and RFR, eliminate Linear Regression model

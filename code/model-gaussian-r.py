@@ -1,18 +1,20 @@
 ##################################################
-## A script to train the final model
+## A script to train to hypertune the gaussian regressor 
 ##################################################
 ## Author: Paul Houssel
-## Last Updated: Nov 19 2022, 21:23
+## Last Updated: Nov 19 2022, 21:55
 ##################################################
 
 import csv
 import pandas as pd
-from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.dummy import DummyRegressor
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import mean_absolute_error
 from verstack.stratified_continuous_split import scsplit # pip install verstack
 from nltk.corpus import stopwords 
+
+
 
 from nltk import download
 from sklearn.gaussian_process import GaussianProcessRegressor as GPR
@@ -35,7 +37,7 @@ if __name__ == "__main__":
 	print(X_train)
 
 	# Now we can train our model. Here we chose a Gradient Boosting Regressor and we set our loss function 
-	reg = GradientBoostingRegressor()
+	reg = GaussianProcessRegressor()
 	
 	# We fit our model using the training data
 	reg.fit(X_train, y_train)
@@ -61,7 +63,7 @@ if __name__ == "__main__":
 	y_pred = [int(value) if value >= 0 else 0 for value in y_pred]
 
 	# Dump the results into a file that follows the required Kaggle template
-	with open("../results/gbr_predictions.txt", 'w') as f:
+	with open("../results/predictions-gaussian-r.txt", 'w') as f:
 		writer = csv.writer(f)
 		writer.writerow(["TweetID", "retweets_count"])
 		for index, prediction in enumerate(y_pred):
