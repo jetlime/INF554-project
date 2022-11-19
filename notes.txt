@@ -13,4 +13,4 @@
     - Hashtags, no correlation, maybe analyse the text ?
     - Urls, remove, no correlation, even the number of urls
     - Mentions, no one mentions anyone
-    - Text: 
+    - Statuses and links seem pretty correlated, thats a pb, stauses count will be removed since it has less correlation, perf decrease, will not remove finally
