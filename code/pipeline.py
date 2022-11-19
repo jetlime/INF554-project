@@ -1,3 +1,10 @@
+##################################################
+## Data preprocessing pipeline
+##################################################
+## Author: Paul Houssel
+## Last Updated: Nov 19 2022, 21:24
+##################################################
+
 import numpy as np
 
 def featurePipeline(X_train, X_test, test):

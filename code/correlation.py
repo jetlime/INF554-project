@@ -1,3 +1,12 @@
+##################################################
+## A data visualisation script investigating the 
+## correlation between features for the original 
+## dataset and the new dataset 
+##################################################
+## Author: Paul Houssel
+## Last Updated: Nov 19 2022, 21:22
+##################################################
+
 # import packages
 import pandas as pd
 import numpy as np

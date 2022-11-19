@@ -1,3 +1,12 @@
+##################################################
+## A data visualisation script investigating the 
+## data distributions of features and the possible
+## normalisation techniques 
+##################################################
+## Author: Paul Houssel
+## Last Updated: Nov 19 2022, 21:26
+##################################################
+
 # import packages
 import pandas as pd
 import numpy as np

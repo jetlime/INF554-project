@@ -6,6 +6,15 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import mean_absolute_error
 from verstack.stratified_continuous_split import scsplit # pip install verstack
 from nltk.corpus import stopwords 
+##################################################
+## A data visualisation script to train the model
+## and evaluate it
+##################################################
+## Author: Paul Houssel
+## Last Updated: Nov 19 2022, 21:23
+##################################################
+
+
 from nltk import download
 from sklearn.gaussian_process import GaussianProcessRegressor as GPR
 
