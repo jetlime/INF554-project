@@ -1,0 +1,46 @@
+import numpy as np
+
+def featurePipeline(X_train, X_test, test):
+	if(test):
+		# We remove the actual number of retweets from our features since it is the value that we are trying to predict
+		X_test = X_test.drop(['retweets_count'], axis=1)
+		X_train = X_train.drop(['retweets_count'], axis=1)
+
+		X_test = X_test.drop(['timestamp'], axis=1)
+		X_test = X_test.drop(['TweetID'], axis=1)
+		X_test = X_test.drop(['friends_count'], axis=1)
+		X_test["urls"] = np.where(X_test["urls"]=="[]",0 , 1)
+		X_test["hashtags"] = np.where(X_test["hashtags"]=="[]",0 , 1)
+		X_test["mentions"] = np.where(X_test["mentions"]=="[]",0 , 1)
+		X_test = X_test.drop(['hashtags'], axis=1)
+		X_test = X_test.drop(['urls'], axis=1)
+		X_test = X_test.drop(['text'], axis=1)
+
+		X_test = X_test.drop(['mentions'], axis=1)
+
+		#X_test["statuses_count"] = X_test["statuses_count"].clip(upper = 100000)
+		X_test["statuses_count"] = np.log(X_test["statuses_count"])
+		# add one to ignore 0 cases, could be problematic for the log normalisation
+		X_test["followers_count"] += 1
+		X_test["followers_count"] = np.log(X_test["followers_count"])
+
+
+	# We remove the actual number of retweets from our features since it is the value that we are trying to predict
+	X_train = X_train.drop(['timestamp'], axis=1)
+	X_train = X_train.drop(['TweetID'], axis=1)
+	X_train = X_train.drop(['friends_count'], axis=1)
+	X_train["urls"] = np.where(X_train["urls"]=="[]",0 , 1)
+	X_train["mentions"] = np.where(X_train["mentions"]=="[]",0 , 1)
+	X_train["hashtags"] = np.where(X_train["hashtags"]=="[]",0 , 1)		
+	# Clipping Normalisation because ..., see normalisation-statues.png
+	X_train["statuses_count"] = np.log(X_train["statuses_count"])
+	X_train["followers_count"] += 1
+	X_train["followers_count"] = np.log(X_train["followers_count"])
+	X_train = X_train.drop(['hashtags'], axis=1)
+	X_train = X_train.drop(['mentions'], axis=1)
+
+	X_train = X_train.drop(['text'], axis=1)
+
+	X_train = X_train.drop(['urls'], axis=1)
+
+	return X_train, X_test
