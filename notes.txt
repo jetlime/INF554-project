@@ -24,5 +24,10 @@
         - 7.27 error score
     - Linear R
         - 11.23 error score
-
-    Conclusions: Investigate further diff between BGR and RFR, eliminate Linear Regression model
+    - Gaussian Regression (seeming to fit best with our features distribution)
+        - Memory error, tryng to allocate 450Gb memory to DRAM sheh!
+    - Logistic Regression: 13.3 error (very loong)
+    - Bayesian Regression: 11.16 error
+    - XGboost: 7,5 error
+    - Sc. Litterature to back up choices. 
+    Conclusions: Investigate further diff between BGR, XGboost, Logistic and RFR, eliminate Linear Regression model  
