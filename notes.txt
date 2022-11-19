@@ -1,0 +1,16 @@
+- Feature Engineering
+    - Statuses Count: 
+        Data distribution, status-boxplot.png and status-boxplot-outliers.png
+            - Scaling: x, too many outliers
+            - Clipping: yes but no, since small number of extreme outliers ; experiences shows it 
+            is not a good ideas, since actually there is a lot of extreme outliers (see second local maxima)
+            - Log Scaling: yes ;Log scaling is helpful when a handful of your values have many points, while most other values have few points. 
+    - Followers: 
+        - Log normalisation for the same reasons
+        - Source to deal with 0 values: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3444996, fix add 1
+        - Increased correlation, drastically
+    - Verified  very small correlation, still more than others
+    - Hashtags, no correlation, maybe analyse the text ?
+    - Urls, remove, no correlation, even the number of urls
+    - Mentions, no one mentions anyone
+    - Text: 
