@@ -50,8 +50,20 @@ labels = [
 f, ax = plt.subplots(figsize=(10, 8))
 f.suptitle('retweets sent wrt time of day', fontsize=16)
 ax.ticklabel_format(style="plain")
-# plt.plot(train_data["TimeOfDay"], train_data['retweets_count'], "r+")
 plt.boxplot(rt_per_hour, vert=False, patch_artist=True, labels=labels)
 ax.set_ylabel('retweets')
 ax.set_xlabel('time of day')
 plt.savefig("../figs/feature-engineering/RT_vs_TOD_mustache.png")
+
+log_rt_per_hour = [
+    np.log(train_data[train_data["TimeOfDay"] == i]["retweets_count"] + 1)
+    for i in range(24)
+]
+# print(rt_per_hour)
+f, ax = plt.subplots(figsize=(10, 8))
+f.suptitle('LOG retweets sent wrt time of day', fontsize=16)
+ax.ticklabel_format(style="plain")
+plt.boxplot(log_rt_per_hour, vert=False, patch_artist=True, labels=labels)
+ax.set_ylabel('retweets')
+ax.set_xlabel('time of day')
+plt.savefig("../figs/feature-engineering/log_RT_vs_TOD_mustache.png")
