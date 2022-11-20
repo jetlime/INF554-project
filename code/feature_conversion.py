@@ -21,7 +21,7 @@ from pipeline import featurePipeline
 train_data = pd.read_csv("../data/train.csv", index_col=False)
 train_data_engineered, _ = featurePipeline(train_data, None, False)
 
-# repartition of tweets sent wrt time of day
+# TIME OF DAY !!
 f, ax = plt.subplots(figsize=(10, 8))
 f.suptitle('Tweets sent wrt time of day', fontsize=16)
 ax.ticklabel_format(style="plain")
@@ -59,7 +59,6 @@ log_rt_per_hour = [
     np.log(train_data[train_data["TimeOfDay"] == i]["retweets_count"] + 1)
     for i in range(24)
 ]
-# print(rt_per_hour)
 f, ax = plt.subplots(figsize=(10, 8))
 f.suptitle('LOG retweets sent wrt time of day', fontsize=16)
 ax.ticklabel_format(style="plain")
@@ -67,3 +66,20 @@ plt.boxplot(log_rt_per_hour, vert=False, patch_artist=True, labels=labels)
 ax.set_ylabel('retweets')
 ax.set_xlabel('time of day')
 plt.savefig("../figs/feature-engineering/log_RT_vs_TOD_mustache.png")
+
+
+# DAY OF WEEK
+log_rt_per_week = [
+    np.log(train_data[train_data["DayOfWeek"] == i]["retweets_count"] + 1)
+    for i in range(7)
+]
+labels = [
+    '{}d'.format(i) for i in range(7)
+]
+f, ax = plt.subplots(figsize=(10, 8))
+f.suptitle('LOG retweets sent wrt day of week', fontsize=16)
+ax.ticklabel_format(style="plain")
+plt.boxplot(log_rt_per_week, vert=False, patch_artist=True, labels=labels)
+ax.set_ylabel('retweets')
+ax.set_xlabel('day of week')
+plt.savefig("../figs/feature-engineering/log_RT_vs_DOW_mustache.png")
