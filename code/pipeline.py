@@ -7,13 +7,31 @@
 
 import numpy as np
 
-def featurePipeline(X_train, X_test, test):
-	if(test):
-		# We remove the actual number of retweets from our features since it is the value that we are trying to predict
-		X_test = X_test.drop(['retweets_count'], axis=1)
-		X_train = X_train.drop(['retweets_count'], axis=1)
+def unixSec2TOD(time : int):
+	"""convert time in unix seconds to time of day (hour)"""
+	secInDay = 86400
+	secInHour = 3600
+	return (time % secInDay) // secInHour
 
+def unixSec2DOW(time : int):
+	"""convert time in unix seconds to day of week (hour)"""
+	secInWeek = 604800
+	secInDay = 86400
+	return (time % secInWeek) // secInDay
+
+def featurePipeline(X_train, X_test, test, drop=True):
+	if(test):
+		# keeping it is sometimes good for data analysis
+		if drop:
+			# We remove the actual number of retweets from our features since it is the value that we are trying to predict
+			X_test = X_test.drop(['retweets_count'], axis=1)
+			X_train = X_train.drop(['retweets_count'], axis=1)
+
+		# replace timestamp with time of day
+		X_test["TimeOfDay"] = unixSec2TOD(X_test['timestamp'])
+		X_test["DayOfWeek"] = unixSec2DOW(X_test['timestamp'])
 		X_test = X_test.drop(['timestamp'], axis=1)
+		
 		X_test = X_test.drop(['TweetID'], axis=1)
 		X_test = X_test.drop(['friends_count'], axis=1)
 		X_test["urls"] = np.where(X_test["urls"]=="[]",0 , 1)
@@ -33,7 +51,10 @@ def featurePipeline(X_train, X_test, test):
 
 
 	# We remove the actual number of retweets from our features since it is the value that we are trying to predict
+	X_train["TimeOfDay"] = unixSec2TOD(X_train['timestamp'])
+	X_train["DayOfWeek"] = unixSec2DOW(X_train['timestamp'])
 	X_train = X_train.drop(['timestamp'], axis=1)
+	
 	X_train = X_train.drop(['TweetID'], axis=1)
 	X_train = X_train.drop(['friends_count'], axis=1)
 	X_train["urls"] = np.where(X_train["urls"]=="[]",0 , 1)
