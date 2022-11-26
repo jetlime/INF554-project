@@ -66,7 +66,11 @@ for name, values in train_data_engineered.iteritems():
         print("Computing {}".format(name))
         #PLot features by label, evolution of correlation 
         f, ax = plt.subplots(figsize=(10, 10))
-        plt.plot(train_data_engineered[str(name)], train_data_engineered["retweets_count"], 'bo')
+
+
+
+        #plt.plot(train_data_engineered[str(name)], train_data_engineered["retweets_count"], 'bo')
+        plt.scatter(x=train_data_engineered[str(name)], y=train_data_engineered["retweets_count"])
         f.suptitle("Correlation Matrix between {0} and the number of retweets in the orginal Dataset".format(name), fontsize=16)
         plt.xlabel(name)
         plt.ylabel('Number of retweets')

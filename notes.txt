@@ -1,3 +1,5 @@
+Initial Hypthesisis: People retweet in regards to emotion they feel
+
 - Feature Engineering
     - Statuses Count: 
         Data distribution, status-boxplot.png and status-boxplot-outliers.png
@@ -14,7 +16,13 @@
     - Urls, remove, no correlation, even the number of urls
     - Mentions, no one mentions anyone
     - Statuses and links seem pretty correlated, thats a pb, stauses count will be removed since it has less correlation, perf decrease, will not remove finally
-
+- Feature Creation:
+    - Text polarity: 
+        Source: https://www.sciencedirect.com/science/article/pii/S0096300315011145?casa_token=2_G8sxdXbasAAAAA:nceUyP7uU1tfU8Bc6j5uHrndQ6zCzlhIICGGarwaRqVGCzq0tcTPQua6y1Yj_BRqONXodh9WXP2u
+            (explaining challenges, 80% acc. of classifications, published in 2015)
+    - Sentimental Value: 
+        - TextBlob, no support for the french language
+        - vaderSentiment-fr
 
 - Baseline Model Finetuning 
     - BGR: 
@@ -31,3 +39,9 @@
     - XGboost: 7,5 error
     - Sc. Litterature to back up choices. 
     Conclusions: Investigate further diff between BGR, XGboost, Logistic and RFR, eliminate Linear Regression model  
+
+
+Why do people Retweet ?:
+    - https://www.jstage.jst.go.jp/article/psysoc/58/4/58_189/_pdf/-char/ja
+    - https://ojs.aaai.org/index.php/ICWSM/article/view/14110
+    More informative tweets, change of initial assumptions, confirmed by our experiement (cf. polarity correlated with reweets)

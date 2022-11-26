@@ -72,6 +72,12 @@ plt.savefig("../figs/feature-engineering/followers_count-density-original.png")
 
 f, ax = plt.subplots(figsize=(10, 8))
 ax.ticklabel_format(style="plain")
+f.suptitle('Density Distribution of the text polarity', fontsize=16)
+train_data_engineered["text_polarity"].plot.density()
+plt.savefig("../figs/feature-engineering/text_polarity-density-original.png")
+
+f, ax = plt.subplots(figsize=(10, 8))
+ax.ticklabel_format(style="plain")
 f.suptitle('Density Distribution of the normalised Number of Followers, using Log Scaling', fontsize=16)
 train_data_engineered["followers_count"].plot.density()
 plt.savefig("../figs/feature-engineering/followers_count-density-normalised-log-scaling.png")
