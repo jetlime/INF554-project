@@ -9,14 +9,14 @@ import numpy as np
 
 def unixSec2TOD(time : int):
 	"""convert time in unix seconds to time of day (hour)"""
-	secInDay = 86400
-	secInHour = 3600
+	secInDay = 86400 * 1000
+	secInHour = 3600 * 1000
 	return (time % secInDay) // secInHour
 
 def unixSec2DOW(time : int):
 	"""convert time in unix seconds to day of week (hour)"""
-	secInWeek = 604800
-	secInDay = 86400
+	secInWeek = 604800 * 1000
+	secInDay = 86400 * 1000
 	return (time % secInWeek) // secInDay
 
 def featurePipeline(X_train, X_test, test, drop=True):

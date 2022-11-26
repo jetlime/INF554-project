@@ -83,3 +83,29 @@ plt.boxplot(log_rt_per_week, vert=False, patch_artist=True, labels=labels)
 ax.set_ylabel('retweets')
 ax.set_xlabel('day of week')
 plt.savefig("../figs/feature-engineering/log_RT_vs_DOW_mustache.png")
+
+
+# WEEKMATRIX
+lwm = [[
+    np.log(np.sum(train_data[(train_data["TimeOfDay"] == i) & (train_data["DayOfWeek"] == j)]["retweets_count"]) + 1)
+    for i in range(24)
+] for j in range(7) ]
+f, ax = plt.subplots(figsize=(10, 8))
+f.suptitle('LOG retweets sent weekmatrix', fontsize=16)
+ax.ticklabel_format(style="plain")
+sns.heatmap(lwm)
+ax.set_xlabel('hour of day')
+ax.set_ylabel('day of week')
+plt.savefig("../figs/feature-engineering/log_TOD_DOW_matrix.png")
+
+mwm = [[
+    np.mean(train_data[(train_data["TimeOfDay"] == i) & (train_data["DayOfWeek"] == j)]["retweets_count"])
+    for i in range(24)
+] for j in range(7) ]
+f, ax = plt.subplots(figsize=(10, 8))
+f.suptitle('mean retweets sent weekmatrix', fontsize=16)
+ax.ticklabel_format(style="plain")
+sns.heatmap(mwm)
+ax.set_xlabel('hour of day')
+ax.set_ylabel('day of week')
+plt.savefig("../figs/feature-engineering/mean_TOD_DOW_matrix.png")
