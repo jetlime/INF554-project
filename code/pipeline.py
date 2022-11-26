@@ -61,6 +61,8 @@ def featurePipeline(X_train, X_test, test, drop=True):
 		# add one to ignore 0 cases, could be problematic for the log normalisation
 		X_test["followers_count"] += 1
 		X_test["followers_count"] = np.log(X_test["followers_count"])
+		X_test["favorites_count"] += 1
+		X_test["favorites_count"] = np.log(X_test["favorites_count"])
 
 		# REMOVED FEATURES		
 		X_test = X_test.drop(['timestamp'], axis=1)
@@ -90,7 +92,9 @@ def featurePipeline(X_train, X_test, test, drop=True):
 	X_train["statuses_count"] = np.log(X_train["statuses_count"])
 	X_train["followers_count"] += 1
 	X_train["followers_count"] = np.log(X_train["followers_count"])
-	
+	X_train["favorites_count"] += 1
+	X_train["favorites_count"] = np.log(X_train["favorites_count"])
+
 	X_train = X_train.drop(['TweetID'], axis=1)
 	X_train = X_train.drop(['friends_count'], axis=1)
 	X_train = X_train.drop(['hashtags'], axis=1)

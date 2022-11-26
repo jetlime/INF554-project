@@ -21,6 +21,7 @@ from pipeline import featurePipeline
 # Load the training data
 train_data = pd.read_csv("../data/train.csv", index_col=False)
 train_data_engineered, _ = featurePipeline(train_data, None, False)
+train_data = pd.read_csv("../data/train.csv", index_col=False)
 
 # INSPECT NORMALISATION - Statuses Count 
 
@@ -69,13 +70,13 @@ ax.ticklabel_format(style="plain")
 f.suptitle('Density Distribution of the Number of Followers', fontsize=16)
 train_data["followers_count"].plot.density()
 plt.savefig("../figs/feature-engineering/followers_count-density-original.png")
-
+'''
 f, ax = plt.subplots(figsize=(10, 8))
 ax.ticklabel_format(style="plain")
 f.suptitle('Density Distribution of the text polarity', fontsize=16)
 train_data_engineered["text_polarity"].plot.density()
 plt.savefig("../figs/feature-engineering/text_polarity-density-original.png")
-
+''' 
 f, ax = plt.subplots(figsize=(10, 8))
 ax.ticklabel_format(style="plain")
 f.suptitle('Density Distribution of the normalised Number of Followers, using Log Scaling', fontsize=16)
@@ -103,3 +104,9 @@ ax.ticklabel_format(style="plain")
 f.suptitle('Density Distribution of the Number of Favorites', fontsize=16)
 train_data["favorites_count"].plot.density()
 plt.savefig("../figs/feature-engineering/favorites_count-density-original.png")
+
+f, ax = plt.subplots(figsize=(10, 8))
+ax.ticklabel_format(style="plain")
+f.suptitle('Density Distribution of the normalised Number of Favorites', fontsize=16)
+train_data_engineered["favorites_count"].plot.density()
+plt.savefig("../figs/feature-engineering/favorites_count-density-normalised.png")
