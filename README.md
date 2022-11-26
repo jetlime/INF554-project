@@ -4,5 +4,5 @@
 
 ## Reproduce our Results
 In this section we present  and explain how to execute our code in order to reproduce our obtained results.
-## Experiments
+## Folders and Experimental scripts
 In this section we explain all the code scripts that were use to experiment various hypothesis.
