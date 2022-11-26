@@ -1,3 +1,7 @@
 venvml
 token.txt
 models/*
+\#*\#
+.\#*
+~*
+__pycache__/
