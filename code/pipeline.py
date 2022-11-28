@@ -26,6 +26,9 @@ def binPolarity(text_polarity):
 	else : 
 		return 0
 
+def sigmoid(arr):
+    return 1 / (1 + np.exp(-arr))
+
 def featurePipeline(X_train, X_test, test, drop=True):
 	if(test):
 		if drop:
@@ -51,6 +54,8 @@ def featurePipeline(X_train, X_test, test, drop=True):
 		#X_test["hashtags"] = np.where(X_test["hashtags"]=="[]",0 , 1)
 		#X_test["mentions"] = np.where(X_test["mentions"]=="[]",0 , 1)
 		#------------Experimentation------------#
+		X_test["url_count"] = X_test["urls"].apply(lambda x: len(x.strip('][').split(', ')))
+		X_test["hash_count"] = X_test["hashtags"].apply(lambda x: len(x.strip("][").split(', ')))
 
 		# replace timestamp with time of day
 		X_test["TimeOfDay"] = unixSec2TOD(X_test['timestamp'])
@@ -90,6 +95,8 @@ def featurePipeline(X_train, X_test, test, drop=True):
 	#X_train["mentions"] = np.where(X_train["mentions"]=="[]",0 , 1)
 	#X_train["hashtags"] = np.where(X_train["hashtags"]=="[]",0 , 1)	
 	#------------Experimentation------------#
+	X_train["url_count"] = X_train["urls"].apply(lambda x: len(x.strip("][").split(', ')))
+	X_train["hash_count"] = X_train["hashtags"].apply(lambda x: len(x.strip("][").split(', ')))
 
 	X_train["TimeOfDay"] = unixSec2TOD(X_train['timestamp'])
 	X_train["DayOfWeek"] = unixSec2DOW(X_train['timestamp'])

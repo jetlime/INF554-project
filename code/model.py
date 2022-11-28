@@ -32,7 +32,8 @@ if __name__ == "__main__":
 
 	X_train, X_test = featurePipeline(X_train, X_test, True)
 
-	print(X_train)
+	print(X_train.describe())
+	print(train_data.describe())
 
 	# Now we can train our model. Here we chose a Gradient Boosting Regressor and we set our loss function 
 	reg = GradientBoostingRegressor()
@@ -65,4 +66,4 @@ if __name__ == "__main__":
 		writer = csv.writer(f)
 		writer.writerow(["TweetID", "retweets_count"])
 		for index, prediction in enumerate(y_pred):
-			writer.writerow([str(tweetID.iloc[index]) , str(int(prediction))])	
+			writer.writerow([str(tweetID.iloc[index]) , str(int(prediction))])
