@@ -2,7 +2,7 @@ import pandas as pd
 from pprint import pprint
 
 def gen_BOW(data):
-    """generate big bag of words"""
+    """generate bag of words"""
     hashtags = [h.strip("[]").split(", ") for h in data['hashtags']]
     BOW = {}
     BOWs = []
@@ -32,6 +32,31 @@ def gen_BOW(data):
         
     return shortBOW, proc_BOWs
 
+
+def gen_BOW2(data):
+    """returns the list of words in the bag of words"""
+    hashtags = [h.strip("[]").split(", ") for h in data['hashtags']]
+    BOW = {}
+    for l in hashtags:
+        for h in l:
+            if len(h) == 0:
+                continue
+            
+            if h in BOW:
+                BOW[h] += 1
+            else:
+                BOW[h] = 1
+
+    return map(lambda x: x[0], list(sorted(BOW.items(), key=lambda item: item[1])[-100:]))
+    
+def sentence_BOW(data, BOW):
+    hashtags = h.strip("[]").split(", ")
+    return dict(filter(lambda i: i[0] in shortBOW, B.items()))
+
+def sentence_BOW2(data, BOW):
+    """returns bit encoding of hashtag presence"""
+    return np.array([1 if i in data else 0 for i in BOW])
+    
 if __name__ == "__main__":
     train_data = pd.read_csv("../data/train.csv")
     tmp = gen_BOW(train_data)
