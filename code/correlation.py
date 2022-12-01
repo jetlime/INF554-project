@@ -83,9 +83,9 @@ for name, values in train_data_engineered.iteritems():
         # cubic smooth line
         ax.plot(train_data_engineered[str(name)], train_data_engineered["retweets_count"], 'bo', markersize=1.5, label='_nolegend_')
         if(i==1):
-            train_data_engineered.groupby(str(name))["retweets_count"].mean().ewm(com=2).mean().plot(color='red', ax=ax, label="Mean Exponentially weighted Smoothing on the mass center", lw=1)
+            train_data_engineered.groupby(str(name))["retweets_count"].mean().ewm(com=1).mean().plot(color='red', ax=ax, label="Mean Exponentially weighted Smoothing on the mass center", lw=1)
         else:
-            train_data_engineered.groupby(str(name))["retweets_count"].mean().ewm(com=2).mean().plot(color='red', ax=ax, lw=1, label='_nolegend_')
+            train_data_engineered.groupby(str(name))["retweets_count"].mean().ewm(com=1).mean().plot(color='red', ax=ax, lw=1, label='_nolegend_')
         if(i==1):
             plt.ylabel('Number of retweets')
         plt.xlabel(name)    
@@ -97,3 +97,10 @@ filename  = "../figs/correlation-engineered/correlation-engineered.png"
 plt.tight_layout()
 plt.savefig(filename)
 plt.close("all")
+
+
+
+f, ax = plt.subplots(figsize=(10, 10))
+sns.lmplot(x='followers_count', y='retweets_count', data=train_data_engineered)
+f.suptitle('Correlation Matrix between features in the orginal Dataset', fontsize=16)
+plt.savefig('../figs/correlation-original/correlation-matrix.png')
