@@ -33,7 +33,7 @@ def gen_BOW(data):
         
     return shortBOW, proc_BOWs
 
-def gen_BOW2(data):
+def gen_BOW2(data, tail=None):
     """returns the list of words in the bag of words"""
     hashtags = [h.strip("[]").split(", ") for h in data['hashtags']]
     BOW = {}
@@ -47,7 +47,9 @@ def gen_BOW2(data):
             else:
                 BOW[h] = 1
 
-    return list(map(lambda x: x[0], list(sorted(BOW.items(), key=lambda item: item[1])[-100:])))
+    if tail is not None:
+        return list(map(lambda x: x[0], list(sorted(BOW.items(), key=lambda item: item[1]))[-tail:]))
+    return list(map(lambda x: x[0], list(sorted(BOW.items(), key=lambda item: item[1]))))
 
 def sentence_BOW(data, BOW):
     hashtags = h.strip("[]").split(", ")
@@ -59,13 +61,24 @@ def sentence_BOW2(data, BOW):
     
 
 def gen_BOW_data(data):
-    BOW = gen_BOW2(data)
+    BOW = gen_BOW2(data, 100)
     X = [sentence_BOW2(i.strip('[]').split(", "), BOW) for i in data['hashtags']]
     Y = np.floor(np.log(data["retweets_count"]+1))
-    return X, Y 
+    return X, Y
+
+def gen_BOW_dataframe(data):
+    BOW = gen_BOW2(data, 100)
+    X = [sentence_BOW2(i.strip('[]').split(", "), BOW) for i in data['hashtags']]
+    df = pd.DataFrame(X, columns=BOW)
+    df["retweets_count"] = data["retweets_count"]
+    return df
 
 if __name__ == "__main__":
     train_data = pd.read_csv("../data/train.csv")
-    tmp = gen_BOW_data(train_data)
-    pprint(tmp[0][-10:])
-    pprint(tmp[1][-10:])
+    # tmp = gen_BOW_data(train_data)
+    # pprint(tmp[0][-10:])
+    # pprint(tmp[1][-10:])
+    # pprint(np.max(tmp[1]))
+    df = gen_BOW_dataframe(train_data)
+    pprint(df)
+    df.to_csv("../data/BOW.csv")
