@@ -82,9 +82,9 @@ def gen_BOW_data(data):
     Y = np.floor(np.log(data["retweets_count"]+1))
     return X, Y
 
-def gen_BOW_dataframe(data):
+def gen_BOW_dataframe(data, tail=None):
     # Only keep the hashtags appearing more than 5 times
-    BOW = gen_BOW2(data, None, descriminate=lambda x:x[1]>5)
+    BOW = gen_BOW2(data, tail, descriminate=lambda x:x[1]>5)
     print("BOW is done")
     print(len(BOW))
     X = batch_sentence_BOW2(data["hashtags"], BOW)
@@ -93,22 +93,22 @@ def gen_BOW_dataframe(data):
     df["retweets_count"] = data["retweets_count"]
     return df
 
-def gen_PCA(df):
-    pca = PCA(n_components=1)
+def gen_pca(df):
+    pca = PCA(n_components=5)
     X = df.drop(['retweets_count'], axis=1)
-    pca_features = pca.fit_transform(X, )
+    pca_features = pca.fit_transform(X,df["retweets_count"])
     return pca_features, pca
 
 def gen_lda(df):
-    clf = LDA(n_components=3)
+    clf = LDA(n_components=5)
     X = df.drop(['retweets_count'], axis=1)
     df_new = clf.fit_transform(X, df["retweets_count"])
     return df_new, clf
 
 def gen_nmf(df):
-    clf = LDA(n_components=10)
+    clf = NMF(n_components=5, verbose=2)
     X = df.drop(['retweets_count'], axis=1)
-    df_new = clf.fit_transform(X, df["retweets_count"])
+    df_new = clf.fit_transform(X)
     return df_new, clf
 
 
@@ -118,25 +118,28 @@ if __name__ == "__main__":
     # pprint(tmp[0][-10:])
     # pprint(tmp[1][-10:])
     # pprint(np.max(tmp[1]))
-    df = gen_BOW_dataframe(train_data)
+    df = gen_BOW_dataframe(train_data, None)
     print(df.shape)
     df.to_csv("../data/BOW-full.csv")
     #df = pd.read_csv('../data/BOW.csv')
 
     # NMF
     #df = pd.read_csv('../data/BOW.csv')
-    df_new,nmf = gen_nmf(df)
+    df_new,pca = gen_pca(df)
+
 
     plt.bar(
-    range(1,len(nmf.explained_variance_ratio_)+1),
-    nmf.explained_variance_ratio_
+    range(1,len(pca.explained_variance_ratio_)+1),
+    pca.explained_variance_ratio_
     )
-    print(nmf.coef_)
+    
 
-    plt.xlabel('nmf Feature')
+    plt.xlabel('pca Feature')
     plt.ylabel('Explained variance')
     plt.title('Feature Explained Variance')
-    plt.savefig('../figs/hashtags/nmf.png')
+    plt.savefig('../figs/hashtags/pca.png')
+    with open('../figs/hashtags/pca-feature.npy', 'wb') as f:
+        np.save(f, pca)
     '''
     # PCA
     df = pd.read_csv('../data/BOW.csv')
