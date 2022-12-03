@@ -6,3 +6,4 @@ models/*
 ~*
 __pycache__/
 data/BOW*
+data/*.csv
