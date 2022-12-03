@@ -6,9 +6,12 @@
 In this section we present  and explain how to execute our code in order to reproduce our obtained results. In order to make our results reproducable, we set a fixed random set and specify the exact versions of the used python libraries (see the file ```requirements.txt``` in the root folder).  
 ## Folders and Experimental scripts
 In this section we explain all the code scripts that were use to experiment various hypothesis.
-- Code
-    - hashtags-engineering folder. Containing all scripts to 
-    - text-engineering folder. Containing all scripts to 
-- Figs
-- models
-- results
+- **./code**
+    - **correlation.py**
+    - **./hashtags-engineering**
+    Containing all scripts for the encoding and dimensionality reduction of the hashtags. 
+    - **./text-engineering folder**
+    Containing all scripts for the vectorization and dimensionality reduction of the text contained in the tweet.
+- **./Figs**
+- **./models**
+- **./results**
