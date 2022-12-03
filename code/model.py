@@ -25,6 +25,7 @@ pd.set_option('display.max_columns', 1000)
 
 if __name__ == "__main__":
 	results = []
+	min = 1000
 	print("Testing baseline model with following features, \n")
 	train_data = pd.read_csv("../data/train.csv")
 
@@ -34,7 +35,7 @@ if __name__ == "__main__":
 
 	print(X_train.columns)
 
-	for i in range(0,5):
+	for i in range(0,10):
 		# Load the training data
 		train_data = pd.read_csv("../data/train.csv")
 
@@ -53,7 +54,8 @@ if __name__ == "__main__":
 		y_pred = reg.predict(X_test)
 		# We want to make sure that all predictions are non-negative integers
 		y_pred = [int(value) if value >= 0 else 0 for value in y_pred]
-		results.append(mean_absolute_error(y_true=y_test, y_pred=y_pred))
+		res = mean_absolute_error(y_true=y_test, y_pred=y_pred)
+		results.append(res)
 		print("Test Prediction error for test number " + str(i) + " is " + str(results[i]) + " \n")
 
 		# Prediction on the evaluation dataset
@@ -69,12 +71,19 @@ if __name__ == "__main__":
 		# We want to make sure that all predictions are non-negative integers
 		y_pred = [int(value) if value >= 0 else 0 for value in y_pred]
 
+		# Only save the best result
+		if res<min:
+			min = res 
+			#  Dump the results into a file that follows the required Kaggle template
+			print("...Saving the currently best result...")
+			with open("../results/gbr_predictions.txt", 'w') as f:
+				writer = csv.writer(f)
+				writer.writerow(["TweetID", "retweets_count"])
+				for index, prediction in enumerate(y_pred):
+					writer.writerow([str(tweetID.iloc[index]) , str(int(prediction))])
+
+
 		
 
 	print("The mean average of the test prediciton is {}".format(str(statistics.mean(results))))
-	#  Dump the results into a file that follows the required Kaggle template
-	with open("../results/gbr_predictions.txt", 'w') as f:
-		writer = csv.writer(f)
-		writer.writerow(["TweetID", "retweets_count"])
-		for index, prediction in enumerate(y_pred):
-			writer.writerow([str(tweetID.iloc[index]) , str(int(prediction))])
+	
