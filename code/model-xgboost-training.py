@@ -22,7 +22,7 @@ from pipeline import featurePipeline
 
 
 # Hypertuning parameters
-boosters = ["gbtree", "gblinear", "dart"]
+boosters = ["gbtree", "dart"] #"gblinear", "dart"]
 
 if __name__ == "__main__":
 	# Load the training data
@@ -36,21 +36,37 @@ if __name__ == "__main__":
 
 	X_train, X_test = featurePipeline(X_train, X_test, True)
 	for booster in boosters :
-		for i in range(1,5):
-			# Now we can train our model. Here we chose a Gradient Boosting Regressor and we set our loss function 
-			reg = XGBRegressor(booster=booster, verbosity=1)
+		# Now we can train our model. Here we chose a Gradient Boosting Regressor and we set our loss function 
+		#reg = XGBRegressor(booster=booster, verbosity=1)
+		reg = XGBRegressor(booster=booster, verbosity=1,\
+			tree_method="gpu_hist", gpu_id=0,\
+			learning_rate=0.01,\
+			#n_estimators=100,\
+			max_depth=5,\
+			gamma=1)
+	
+		# We pre-fit our model using the training data
+		reg.fit(X_train, y_train)
 
-			print("Fitting model using {}, iteration {}\n".format(booster, str(i)))
+		for i in range(1,10):
+			#print("Fitting model using {}, iteration {}\n".format(booster, str(i)))
 
 			# We fit our model using the training data
-			reg.fit(X_train, y_train)
+			reg.fit(X_train, y_train,\
+                    xgb_model=reg)
 
 			# Save the model as a pickle file
 			with open("../models/xgboost-{}-{}".format(booster, str(i)), 'wb') as file:
 				pickle.dump(reg, file)
 
+			y_ctrl = reg.predict(X_train)
 			# And then we predict the values for our testing set
 			y_pred = reg.predict(X_test)
 			# We want to make sure that all predictions are non-negative integers
 			y_pred = [int(value) if value >= 0 else 0 for value in y_pred]
-			print("Test Prediction error:", mean_absolute_error(y_true=y_test, y_pred=y_pred))
+			#print("Test Prediction error:", mean_absolute_error(y_true=y_test, y_pred=y_pred))
+			print('{}:{} -> Train: {} \t Test: {}'.format(
+				booster, i,
+				mean_absolute_error(y_true=y_train, y_pred=y_ctrl),
+				mean_absolute_error(y_true=y_test, y_pred=y_pred)
+				))
