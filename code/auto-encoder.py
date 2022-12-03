@@ -29,8 +29,10 @@ if __name__ == "__main__":
     # pprint(np.max(tmp[1]))
     df = gen_BOW_dataframe(train_data, None)
     print(df.shape)
-        
-    X_train, x_test = train_test_split(df, test_size=0.2, random_state=45)
+    print(df)
+    label = df["retweets_count"]
+    df = df.drop(['retweets_count'], axis=1)
+    X_train, x_test = train_test_split(df, test_size=0.1, random_state=45)
     print(X_train.shape)
     print(x_test.shape)
     '''
@@ -63,59 +65,44 @@ if __name__ == "__main__":
     # define the number of features
     ncol = X_train.shape[1]
 
-    encoding_dim = 5
+    encoding_dim = 3
 
     input_dim = Input(shape = (ncol, ))
 
     # Encoder Layers
-    encoded7 = Dense(1250, activation = 'relu')(input_dim)
-    encoded8 = Dense(900, activation = 'relu')(encoded7)
-    encoded9 = Dense(700, activation = 'relu')(encoded8)
-    encoded10 = Dense(400, activation = 'relu')(encoded9)
-    encoded11 = Dense(200, activation = 'relu')(encoded10)
-    encoded12 = Dense(100, activation = 'relu')(encoded11)
+    encoded7 = Dense(128, activation = 'relu')(input_dim)
+    encoded11 = Dense(64, activation = 'relu')(encoded7)
+    encoded12 = Dense(32, activation = 'relu')(encoded11)
     encoded13 = Dense(encoding_dim, activation = 'relu')(encoded12)
 
     # Decoder Layers
-    decoded1 = Dense(100, activation = 'relu')(encoded13)
-    decoded2 = Dense(400, activation = 'relu')(decoded1)
-    decoded3 = Dense(800, activation = 'relu')(decoded2)
-    decoded4 = Dense(1000, activation = 'relu')(decoded3)
-    decoded5 = Dense(ncol, activation = 'sigmoid')(decoded4)
+    decoded1 = Dense(64, activation = 'relu')(encoded13)
+    decoded2 = Dense(128, activation = 'relu')(decoded1)
+    decoded3 = Dense(256, activation = 'relu')(decoded2)
+    decoded5 = Dense(ncol, activation = 'sigmoid')(decoded3)
 
     # Combine Encoder and Deocder layers
     autoencoder = Model(inputs = input_dim, outputs = decoded5)
 
     # Compile the Model
-    autoencoder.compile(optimizer = 'adadelta', loss = 'binary_crossentropy')
+    autoencoder.compile(optimizer = 'adadelta', loss = losses.MeanSquaredError())
 
 
-    history = autoencoder.fit(X_train, X_train, epochs = 10, batch_size = 150, shuffle = False, validation_data = (x_test, x_test), callbacks=[callback])
+    history = autoencoder.fit(X_train, X_train, epochs = 100, batch_size = 64, shuffle = False, validation_data = (x_test, x_test), callbacks=[callback])
 
 
     # Use Encoder level to reduce dimension of train and test data¶
     encoder = Model(inputs = input_dim, outputs = encoded13)
     encoded_input = Input(shape = (encoding_dim, ))
 
-    encoded_train = pd.DataFrame(encoder.predict(X_train))
+    encoded_train = pd.DataFrame(encoder.predict(df))
     encoded_train = encoded_train.add_prefix('hastag_encoded_')
 
-    encoded_test = pd.DataFrame(encoder.predict(x_test))
-    encoded_test = encoded_test.add_prefix('hastag_encoded_')
+
+    encoded_train["retweets_count"] = label
 
 
-
-    print(encoded_train.shape)
-    encoded_train.head()
-
-    print(encoded_test.shape)
-    encoded_test.head()
-
-
-
-    encoded_train.to_csv('train_encoded.csv', index=False)
-    encoded_test.to_csv('test_encoded.csv', index=False)
-
+    encoded_train.to_csv('hashtahs_encoded.csv', index=False)
 
 
 

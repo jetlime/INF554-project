@@ -84,7 +84,7 @@ def gen_BOW_data(data):
 
 def gen_BOW_dataframe(data, tail=None):
     # Only keep the hashtags appearing more than 5 times
-    BOW = gen_BOW2(data, tail, descriminate=lambda x:x[1]>5)
+    BOW = gen_BOW2(data, tail, descriminate=lambda x:x[1]>100)
     print("BOW is done")
     print(len(BOW))
     X = batch_sentence_BOW2(data["hashtags"], BOW)
