@@ -1,4 +1,4 @@
-# This script implements an auto encoder used to reduce the dimensionality of the the one-hot encoded hashtag Bag of Words features
+# This script implements an auto encoder used to reduce the dimensionality of the one-hot encoded hashtag Bag of Words features
 
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     decoded4 = Dense(ncol, activation = 'sigmoid', name="Decoder-04")(decoded3)
 
     # Combine Encoder and Deocder layers
-    autoencoder = Model(inputs = input_dim, outputs = decoded4)
+    autoencoder = Model(inputs = input_dim, outputs = encoded3)
 
     # Compile the Model
     autoencoder.compile(optimizer = 'adadelta', loss = losses.MeanSquaredError())

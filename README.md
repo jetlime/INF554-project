@@ -12,6 +12,10 @@ In this section we explain all the code scripts that were use to experiment vari
     Containing all scripts for the encoding and dimensionality reduction of the hashtags. 
     - **./text-engineering**
     Containing all scripts for the vectorization and dimensionality reduction of the text contained in the tweet.
+    - **correlation.py**
+    A script to plot all the correlation plots and correlation matrices of the original and engineered features
+    - **normalisation.py**
+    A script to inspect the data distribution of certain features and the effect of given normalisation techniques. 
 - **./Figs**
 - **./models**
 - **./results**
