@@ -7,7 +7,7 @@ In this section we present  and explain how to execute our code in order to repr
 ## Folders and Experimental scripts
 In this section we explain all the code scripts that were use to experiment various hypothesis.
 - **./code**
-    - **correlation.py**
+    - **pipeline.py**, A python method to preprocess the dataset, such that it can be used for the training and the evaluation of our models. 
     - **./hashtags-engineering**
     Containing all scripts for the encoding and dimensionality reduction of the hashtags. 
     - **./text-engineering folder**
