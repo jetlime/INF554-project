@@ -10,7 +10,7 @@ In this section we explain all the code scripts that were use to experiment vari
     - **pipeline.py**, A python method to preprocess the dataset, such that it can be used for the training and the evaluation of our models. 
     - **./hashtags-engineering**
     Containing all scripts for the encoding and dimensionality reduction of the hashtags. 
-    - **./text-engineering folder**
+    - **./text-engineering**
     Containing all scripts for the vectorization and dimensionality reduction of the text contained in the tweet.
 - **./Figs**
 - **./models**
