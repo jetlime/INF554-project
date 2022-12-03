@@ -53,6 +53,11 @@ def featurePipeline(X_train, X_test, test, drop=True):
 		#X_test["urls"] = np.where(X_test["urls"]=="[]",0 , 1)
 		#X_test["hashtags"] = np.where(X_test["hashtags"]=="[]",0 , 1)
 		#X_test["mentions"] = np.where(X_test["mentions"]=="[]",0 , 1)
+
+		#X_test["favorites_count"] += 1
+		#X_test["favorites_count"] = np.log(X_test["favorites_count"])
+		# round up to three decimal places
+		#X_test["favorites_count"] = round(X_test["favorites_count"], 3)
 		#------------Experimentation------------#
 		X_test["url_count"] = X_test["urls"].apply(lambda x: len(x.strip('][').split(', ')))
 		X_test["hash_count"] = X_test["hashtags"].apply(lambda x: len(x.strip("][").split(', ')))
@@ -66,18 +71,14 @@ def featurePipeline(X_train, X_test, test, drop=True):
 		# add one to ignore 0 cases, could be problematic for the log normalisation
 		X_test["followers_count"] += 1
 		X_test["followers_count"] = np.log(X_test["followers_count"])
-		#X_test["favorites_count"] += 1
-		#X_test["favorites_count"] = np.log(X_test["favorites_count"])
-		# round up to three decimal places
-		#X_test["favorites_count"] = round(X_test["favorites_count"], 3)
+		
 		X_test["followers_count"] = round(X_test["followers_count"], 3)
-		X_test["statuses_count"] = round(X_test["statuses_count"], 3)
 
 		# REMOVED FEATURES		
 		X_test = X_test.drop(['timestamp'], axis=1)
 		X_test = X_test.drop(['mentions'], axis=1)
 		X_test = X_test.drop(['text'], axis=1)
-		#X_test = X_test.drop(['verified'], axis=1)
+		X_test = X_test.drop(['verified'], axis=1)
 		X_test = X_test.drop(['TweetID'], axis=1)
 		X_test = X_test.drop(['friends_count'], axis=1)
 		X_test = X_test.drop(['hashtags'], axis=1)
@@ -85,6 +86,9 @@ def featurePipeline(X_train, X_test, test, drop=True):
 		X_test = X_test.drop(['statuses_count'], axis=1)
 		X_test = X_test.drop(['TimeOfDay'], axis=1)
 		X_test = X_test.drop(['DayOfWeek'], axis=1)
+		X_test = X_test.drop(['url_count'], axis=1)
+		X_test = X_test.drop(['hash_count'], axis=1)
+
 
 	#------------Experimentation------------#
 
@@ -96,6 +100,10 @@ def featurePipeline(X_train, X_test, test, drop=True):
 	#X_train["urls"] = np.where(X_train["urls"]=="[]",0 , 1)
 	#X_train["mentions"] = np.where(X_train["mentions"]=="[]",0 , 1)
 	#X_train["hashtags"] = np.where(X_train["hashtags"]=="[]",0 , 1)	
+	#X_train["favorites_count"] += 1
+	#X_train["favorites_count"] = np.log(X_train["favorites_count"])
+	#X_train["favorites_count"] = round(X_train["favorites_count"], 3)
+
 	#------------Experimentation------------#
 	X_train["url_count"] = X_train["urls"].apply(lambda x: len(x.strip("][").split(', ')))
 	X_train["hash_count"] = X_train["hashtags"].apply(lambda x: len(x.strip("][").split(', ')))
@@ -106,11 +114,7 @@ def featurePipeline(X_train, X_test, test, drop=True):
 	X_train["statuses_count"] = np.log(X_train["statuses_count"])
 	X_train["followers_count"] += 1
 	X_train["followers_count"] = np.log(X_train["followers_count"])
-	#X_train["favorites_count"] += 1
-	#X_train["favorites_count"] = np.log(X_train["favorites_count"])
-	#X_train["favorites_count"] = round(X_train["favorites_count"], 3)
 	X_train["followers_count"] = round(X_train["followers_count"], 3)
-	X_train["statuses_count"] = round(X_train["statuses_count"], 3)
 
 	X_train = X_train.drop(['TweetID'], axis=1)
 	X_train = X_train.drop(['friends_count'], axis=1)
@@ -118,12 +122,12 @@ def featurePipeline(X_train, X_test, test, drop=True):
 	X_train = X_train.drop(['mentions'], axis=1)
 	X_train = X_train.drop(['text'], axis=1)
 	X_train = X_train.drop(['urls'], axis=1)
-	#X_train = X_train.drop(['verified'], axis=1)
+	X_train = X_train.drop(['verified'], axis=1)
 	X_train = X_train.drop(['timestamp'], axis=1)
 	X_train = X_train.drop(['statuses_count'], axis=1)
 	X_train = X_train.drop(['TimeOfDay'], axis=1)
 	X_train = X_train.drop(['DayOfWeek'], axis=1)
-
-
+	X_train = X_train.drop(['url_count'], axis=1)
+	X_train = X_train.drop(['hash_count'], axis=1)
 
 	return X_train, X_test

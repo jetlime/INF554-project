@@ -45,13 +45,6 @@ train_data["statuses_count"].plot.density()
 ax.set_xlim(left=-10000)
 plt.savefig("../figs/feature-engineering/status-density-original.png")
 
-f, ax = plt.subplots(figsize=(10, 8))
-ax.ticklabel_format(style="plain")
-f.suptitle('Density Distribution of the normalised Number of Statuses, using Log Scaling', fontsize=16)
-train_data_engineered["statuses_count"].plot.density()
-ax.set_xlim(left=-1)
-plt.savefig("../figs/feature-engineering/status-density-normalised-log-scaling.png")
-
 # INSPECT NORMALISATION - FOllowers Count
 
 f, ax = plt.subplots(figsize=(10, 8))

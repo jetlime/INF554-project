@@ -17,6 +17,7 @@ from sklearn.preprocessing import minmax_scale
 from sklearn.model_selection import train_test_split
 from keras.layers import Input, Dense
 from keras.models import Model
+from tensorflow.keras.utils import plot_model
 
 callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5)
 
@@ -41,23 +42,30 @@ if __name__ == "__main__":
     input_dim = Input(shape = (ncol, ))
 
     # Encoder Layers
-    encoded7 = Dense(128, activation = 'relu')(input_dim)
-    encoded11 = Dense(64, activation = 'relu')(encoded7)
-    encoded12 = Dense(32, activation = 'relu')(encoded11)
-    encoded13 = Dense(encoding_dim, activation = 'relu')(encoded12)
+    encoded1 = Dense(128, activation = 'relu', name="Encoder-01")(input_dim)
+    encoded2 = Dense(64, activation = 'relu', name="Encoder-02")(encoded1)
+    encoded3 = Dense(32, activation = 'relu', name="Encoder-03")(encoded2)
+    bottle_neck = Dense(encoding_dim, activation = 'relu', name="BottleNeck")(encoded3)
 
     # Decoder Layers
-    decoded1 = Dense(64, activation = 'relu')(encoded13)
-    decoded2 = Dense(128, activation = 'relu')(decoded1)
-    decoded3 = Dense(256, activation = 'relu')(decoded2)
-    decoded5 = Dense(ncol, activation = 'sigmoid')(decoded3)
+    decoded1 = Dense(64, activation = 'relu', name="Decoder-01")(bottle_neck)
+    decoded2 = Dense(128, activation = 'relu', name="Decoder-02")(decoded1)
+    decoded3 = Dense(256, activation = 'relu', name="Decoder-03")(decoded2)
+    decoded4 = Dense(ncol, activation = 'sigmoid', name="Decoder-04")(decoded3)
 
     # Combine Encoder and Deocder layers
-    autoencoder = Model(inputs = input_dim, outputs = decoded5)
+    autoencoder = Model(inputs = input_dim, outputs = decoded4)
 
     # Compile the Model
     autoencoder.compile(optimizer = 'adadelta', loss = losses.MeanSquaredError())
 
+    # plot and save the architecture of the model as an image file
+    plot_model(autoencoder, to_file='auto-encoder.png', show_shapes=True,
+    show_dtype=False,
+    show_layer_names=True,
+    rankdir="LR",
+    expand_nested=False,
+n    layer_range=None)
 
     history = autoencoder.fit(X_train, X_train, epochs = 100, batch_size = 64, shuffle = False, validation_data = (x_test, x_test), callbacks=[callback])
 
