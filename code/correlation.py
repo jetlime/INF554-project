@@ -36,7 +36,6 @@ sns.heatmap(corr,annot=True, mask=np.zeros_like(corr, dtype=np.bool),
 f.suptitle('Correlation Matrix between features in the orginal Dataset', fontsize=16)
 plt.savefig('../figs/correlation-original/correlation-matrix.png')
 
-
 # run correlation matrix and plot on the engineered features
 
 f, ax = plt.subplots(figsize=(10, 10))
