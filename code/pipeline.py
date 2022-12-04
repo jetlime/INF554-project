@@ -79,8 +79,8 @@ def featurePipeline(X_train, X_test, test, drop=True):
 		X_test = X_test.drop(['urls'], axis=1)
 		X_test = X_test.drop(['statuses_count'], axis=1)
 		X_test = X_test.drop(['timestamp'], axis=1)
-		X_test = X_test.drop(['TimeOfDay'], axis=1)
-		X_test = X_test.drop(['DayOfWeek'], axis=1)
+		# X_test = X_test.drop(['TimeOfDay'], axis=1)
+		# X_test = X_test.drop(['DayOfWeek'], axis=1)
 		#X_test = X_test.drop(['url_count'], axis=1)
 
 	#------------Experimentation------------#
@@ -120,8 +120,8 @@ def featurePipeline(X_train, X_test, test, drop=True):
 	X_train = X_train.drop(['verified'], axis=1)
 	X_train = X_train.drop(['statuses_count'], axis=1)
 	X_train = X_train.drop(['timestamp'], axis=1)
-	X_train = X_train.drop(['TimeOfDay'], axis=1)
-	X_train = X_train.drop(['DayOfWeek'], axis=1)
+	# X_train = X_train.drop(['TimeOfDay'], axis=1)
+	# X_train = X_train.drop(['DayOfWeek'], axis=1)
 	#X_train = X_train.drop(['hash_count'], axis=1)
 	#X_train = X_train.drop(['url_count'], axis=1)
 

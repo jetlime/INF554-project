@@ -22,7 +22,7 @@ from pipeline import featurePipeline
 
 
 # Hypertuning parameters
-boosters = ["gbtree", "dart"] #"gblinear", "dart"]
+boosters = ["gbtree"] #, "dart"] #"gblinear", "dart"]
 
 if __name__ == "__main__":
 	# Load the training data
@@ -35,20 +35,30 @@ if __name__ == "__main__":
 	X_train, X_test, y_train, y_test = scsplit(train_data, train_data['retweets_count'], stratify=train_data['retweets_count'], train_size=0.7, test_size=0.3)
 
 	X_train, X_test = featurePipeline(X_train, X_test, True)
+	X_test = X_test.drop(['TimeOfDay'], axis=1)
+	X_test = X_test.drop(['DayOfWeek'], axis=1)
+	X_train = X_train.drop(['TimeOfDay'], axis=1)
+	X_train = X_train.drop(['DayOfWeek'], axis=1)
+	# X_train = X_train.drop(['text_polarity', 'text_sentiment'], axis=1)
+	# X_test = X_test.drop(['text_polarity', 'text_sentiment'], axis=1)
+	print(X_train.columns)
 	for booster in boosters :
 		# Now we can train our model. Here we chose a Gradient Boosting Regressor and we set our loss function 
 		#reg = XGBRegressor(booster=booster, verbosity=1)
 		reg = XGBRegressor(booster=booster, verbosity=1,\
 			tree_method="gpu_hist", gpu_id=0,\
-			learning_rate=0.01,\
-			#n_estimators=100,\
-			max_depth=5,\
-			gamma=1)
+			objective='reg:absoluteerror',\
+			learning_rate=0.3,\
+			min_child_weight=2,\
+			eval_metric="mae",\
+			n_estimators=100,\
+			max_depth=3,\
+			gamma=0)
 	
 		# We pre-fit our model using the training data
 		reg.fit(X_train, y_train)
 
-		for i in range(1,10):
+		for i in range(1,1000):
 			#print("Fitting model using {}, iteration {}\n".format(booster, str(i)))
 
 			# We fit our model using the training data
