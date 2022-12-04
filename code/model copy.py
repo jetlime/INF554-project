@@ -23,20 +23,6 @@ from pipeline import featurePipeline
 
 pd.set_option('display.max_columns', 1000)
 
-parameters = {
-    "n_estimators":[5,50,250,500],
-    "max_depth":[1,3,5,7,9],
-    "learning_rate":[0.01,0.1,1,10,100]
-}
-
-def display(results):
-	print("Best: %f using %s" % (results.best_score_, results.best_params_)) # summarize all scores that were evaluated
-	means = results.cv_results_['mean_test_score']
-	stds = results.cv_results_['std_test_score']
-	params = results.cv_results_['params']
-	for mean, stdev, param in zip(means, stds, params):
-		print("%f (%f) with: %r" % (mean, stdev, param))
-
 if __name__ == "__main__":
 	print("Testing baseline model with following features, \n")
 	train_data = pd.read_csv("../data/train.csv")
@@ -58,17 +44,15 @@ if __name__ == "__main__":
 
 	# Now we can train our model. Here we chose a Gradient Boosting Regressor and we set our loss function 
 	reg = GradientBoostingRegressor()
-	cv = GridSearchCV(estimator = reg,param_grid=parameters,cv=2, verbose=3)
+
 	# We fit our model using the training data
-	cv.fit(X_train, y_train)
-	print(cv.best_params_)
+	reg.fit(X_train, y_train)
 	# And then we predict the values for our testing set
-	'''
 	y_pred = reg.predict(X_test)
 	# We want to make sure that all predictions are non-negative integers
 	y_pred = [int(value) if value >= 0 else 0 for value in y_pred]
 	res = mean_absolute_error(y_true=y_test, y_pred=y_pred)
-
+	print("Test Prediction error: " + str(res))
 	# Prediction on the evaluation dataset
 	# Load the evaluation data
 	eval_data = pd.read_csv("../data/evaluation.csv")
@@ -89,5 +73,3 @@ if __name__ == "__main__":
 		writer.writerow(["TweetID", "retweets_count"])
 		for index, prediction in enumerate(y_pred):
 			writer.writerow([str(tweetID.iloc[index]) , str(int(prediction))])
-	'''
-	display(cv)

@@ -80,8 +80,8 @@ def featurePipeline(X_train, X_test, test, drop=True):
 		X_test = X_test.drop(['statuses_count'], axis=1)
 		X_test = X_test.drop(['timestamp'], axis=1)
 		X_test = X_test.drop(['TimeOfDay'], axis=1)
-		X_test = X_test.drop(['DayOfWeek'], axis=1)
-		#X_test = X_test.drop(['url_count'], axis=1)
+		#X_test = X_test.drop(['DayOfWeek'], axis=1)
+		X_test = X_test.drop(['url_count'], axis=1)
 
 	#------------Experimentation------------#
 	#X_train["text_polarity"] = X_train["text_polarity"].apply(binPolarity)
@@ -121,8 +121,8 @@ def featurePipeline(X_train, X_test, test, drop=True):
 	X_train = X_train.drop(['statuses_count'], axis=1)
 	X_train = X_train.drop(['timestamp'], axis=1)
 	X_train = X_train.drop(['TimeOfDay'], axis=1)
-	X_train = X_train.drop(['DayOfWeek'], axis=1)
+	#X_train = X_train.drop(['DayOfWeek'], axis=1)
 	#X_train = X_train.drop(['hash_count'], axis=1)
-	#X_train = X_train.drop(['url_count'], axis=1)
+	X_train = X_train.drop(['url_count'], axis=1)
 
 	return X_train, X_test

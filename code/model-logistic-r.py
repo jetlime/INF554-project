@@ -12,8 +12,6 @@ from sklearn.metrics import mean_absolute_error
 from verstack.stratified_continuous_split import scsplit # pip install verstack
 from nltk.corpus import stopwords 
 
-
-
 from nltk import download
 from sklearn.gaussian_process import GaussianProcessRegressor as GPR
 
