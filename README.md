@@ -13,7 +13,7 @@ In this section we explain all the code scripts that were use to experiment vari
     - **./text-engineering**
     Containing all scripts for the vectorization and dimensionality reduction of the text contained in the tweet.
     - **./baseline-models**
-    Evaluation of all baseline models reported in section *3.2* of our report. 
+    Evaluation and training of all baseline models reported in section *3.2* of our report. For each model, there exists a given script to train the given model with the default model parameters after applying our feature engineering pipeline to the training and test set. 
     - **correlation.py**
     A script to plot all the correlation plots and correlation matrices of the original and engineered features
     - **normalisation.py**
