@@ -9,7 +9,7 @@ import pandas as pd
 from sklearn.metrics import mean_absolute_error
 from verstack.stratified_continuous_split import scsplit # pip install verstack
 from xgboost import XGBRegressor
-from pipeline import featurePipeline
+from pipeline_xgb import featurePipeline
 
 # Hypertuning parameters
 boosters = ["gbtree"] #, "dart"] #"gblinear", "dart"]
