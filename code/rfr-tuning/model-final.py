@@ -48,10 +48,10 @@ if __name__ == "__main__":
 
 		# And then we predict the values for our testing set
 		y_pred = reg.predict(eval_data)
-
+		mini = result_pred
+		
 		# We want to make sure that all predictions are non-negative integers
 		y_pred = [int(value) if value >= 0 else 0 for value in y_pred]
-		mini = result_pred
 		if result_pred<mini:
 			print("Found better result, saving the prediction to csv file")
 			# Dump the results into a file that follows the required Kaggle template
