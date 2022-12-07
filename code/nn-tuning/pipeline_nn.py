@@ -1,5 +1,5 @@
 ##################################################
-## Data preprocessing pipeline for the GBR tuning
+## Data preprocessing pipeline for the tuning of the RFR regressor
 ##################################################
 
 from textblob import TextBlob
@@ -51,8 +51,8 @@ def featurePipeline(X_train, X_test, test, drop=True):
 		#------------Experimentation------------#
 
 		# Compute and bin the polarity of the text
-		#X_test["text_polarity"] = X_test["text"].apply(lambda text: TextBlob(text, pos_tagger=PatternTagger(), analyzer=PatternAnalyzer()).sentiment[0])
-		#X_test["text_sentiment"] = X_test["text"].apply(lambda text: TextBlob(text, pos_tagger=PatternTagger(), analyzer=PatternAnalyzer()).sentiment[1])
+		X_test["text_polarity"] = X_test["text"].apply(lambda text: TextBlob(text, pos_tagger=PatternTagger(), analyzer=PatternAnalyzer()).sentiment[0])
+		X_test["text_sentiment"] = X_test["text"].apply(lambda text: TextBlob(text, pos_tagger=PatternTagger(), analyzer=PatternAnalyzer()).sentiment[1])
 
 		# Count the hashtags and url's
 		X_test["url_count"] = X_test["urls"].apply(lambda x: len(x.strip('][').split(', ')))
@@ -78,8 +78,8 @@ def featurePipeline(X_train, X_test, test, drop=True):
 		X_test = X_test.drop(['statuses_count'], axis=1)
 		X_test = X_test.drop(['timestamp'], axis=1)
 		X_test = X_test.drop(['TimeOfDay'], axis=1)
-		X_test = X_test.drop(['DayOfWeek'], axis=1)
-		#X_test = X_test.drop(['url_count'], axis=1)
+		#X_test = X_test.drop(['DayOfWeek'], axis=1)
+		X_test = X_test.drop(['url_count'], axis=1)
 
 	#------------Experimentation------------#
 	#X_train["text_polarity"] = X_train["text_polarity"].apply(binPolarity)
@@ -93,10 +93,13 @@ def featurePipeline(X_train, X_test, test, drop=True):
 	#X_train["favorites_count"] += 1
 	#X_train["favorites_count"] = np.log(X_train["favorites_count"])
 	#X_train["favorites_count"] = round(X_train["favorites_count"], 3)
+
+	#X_train = X_train.drop(['DayOfWeek'], axis=1)
+	#X_train = X_train.drop(['hash_count'], axis=1)
 	#------------Experimentation------------#
 
-	#X_train["text_polarity"] = X_train["text"].apply(lambda text: TextBlob(text, pos_tagger=PatternTagger(), analyzer=PatternAnalyzer()).sentiment[0])
-	#X_train["text_sentiment"] = X_train["text"].apply(lambda text: TextBlob(text, pos_tagger=PatternTagger(), analyzer=PatternAnalyzer()).sentiment[1])
+	X_train["text_polarity"] = X_train["text"].apply(lambda text: TextBlob(text, pos_tagger=PatternTagger(), analyzer=PatternAnalyzer()).sentiment[0])
+	X_train["text_sentiment"] = X_train["text"].apply(lambda text: TextBlob(text, pos_tagger=PatternTagger(), analyzer=PatternAnalyzer()).sentiment[1])
 
 
 	X_train["url_count"] = X_train["urls"].apply(lambda x: len(x.strip("][").split(', ')))
@@ -108,7 +111,6 @@ def featurePipeline(X_train, X_test, test, drop=True):
 	X_train["followers_count"] += 1
 	X_train["followers_count"] = np.log(X_train["followers_count"])
 	
-	
 	X_train = X_train.drop(['TweetID'], axis=1)
 	X_train = X_train.drop(['friends_count'], axis=1)
 	X_train = X_train.drop(['hashtags'], axis=1)
@@ -119,8 +121,6 @@ def featurePipeline(X_train, X_test, test, drop=True):
 	X_train = X_train.drop(['statuses_count'], axis=1)
 	X_train = X_train.drop(['timestamp'], axis=1)
 	X_train = X_train.drop(['TimeOfDay'], axis=1)
-	#X_train = X_train.drop(['DayOfWeek'], axis=1)
-	X_train = X_train.drop(['hash_count'], axis=1)
-	#X_train = X_train.drop(['url_count'], axis=1)
+	X_train = X_train.drop(['url_count'], axis=1)
 
 	return X_train, X_test
