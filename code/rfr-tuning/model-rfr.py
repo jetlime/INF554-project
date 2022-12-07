@@ -1,14 +1,27 @@
 ##################################################
-## A script to train and evaluate the baseline RFR regressor 
+## A script to train an hypertune the RFR regressor 
 ##################################################
-
 import csv
 import pandas as pd
+import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
 from verstack.stratified_continuous_split import scsplit # pip install verstack
-from nltk.corpus import stopwords 
+from sklearn.model_selection import GridSearchCV
 from pipeline_rfr import featurePipeline
+
+parameters = {
+	# Number of trees in the forest
+    'n_estimators': [100, 150, 200, 250, 300],
+	# maimum number of levels in each decision tree
+    'max_depth': [int(x) for x in np.linspace(1, 110, num = 11)],
+	# maimum number of features considered for splitting a node (auto: same as #features ; sqrt: sqrt(#features))
+	'max_features': ['auto', 'sqrt'],
+	# Method of selecting samples for training each tree
+	'bootstrap' : [True, False],
+	# The minimum number of samples required to split an internal node
+	'min_samples_split' : [2, 5, 10]
+}
 
 if __name__ == "__main__":
 	# Load the training data
@@ -25,34 +38,9 @@ if __name__ == "__main__":
 	print(X_train)
 
 	# Now we can train our model. Here we chose a Gradient Boosting Regressor and we set our loss function 
-	reg = RandomForestRegressor()
-	
+	reg = RandomForestRegressor(random_state=0)
+	clf = GridSearchCV(reg, parameters, verbose=3, cv=2)
 	# We fit our model using the training data
-	reg.fit(X_train, y_train)
-	# And then we predict the values for our testing set
-	y_pred = reg.predict(X_test)
-	# We want to make sure that all predictions are non-negative integers
-	y_pred = [int(value) if value >= 0 else 0 for value in y_pred]
-
-	print("Test Prediction error:", mean_absolute_error(y_true=y_test, y_pred=y_pred))
-
-
-	# Prediction on the evaluation dataset
-	# Load the evaluation data
-	eval_data = pd.read_csv("../../data/evaluation.csv")
-	# Pipe the evaluation data through the dataset
-	tweetID = eval_data['TweetID']
-	eval_data, _ = featurePipeline(eval_data, None, False)
-
-	# And then we predict the values for our testing set
-	y_pred = reg.predict(eval_data)
-
-	# We want to make sure that all predictions are non-negative integers
-	y_pred = [int(value) if value >= 0 else 0 for value in y_pred]
-
-	# Dump the results into a file that follows the required Kaggle template
-	with open("../../results/predictions-rfr.txt", 'w') as f:
-		writer = csv.writer(f)
-		writer.writerow(["TweetID", "retweets_count"])
-		for index, prediction in enumerate(y_pred):
-			writer.writerow([str(tweetID.iloc[index]) , str(int(prediction))])	
+	clf.fit(X_train, y_train)
+	# Print the results of the grid search
+	print(clf.cv_results_dict_)

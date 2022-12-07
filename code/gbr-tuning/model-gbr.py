@@ -5,7 +5,6 @@
 import csv
 import pandas as pd
 from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import mean_absolute_error
 from verstack.stratified_continuous_split import scsplit # pip install verstack
 from pipeline_gbr import featurePipeline
