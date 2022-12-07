@@ -1,6 +1,5 @@
 ##################################################
-## A script to train to hypertune the XGBoost
-## regressor 
+## A script to train and hypertune the XGBoost regressor 
 ##################################################
 
 import csv

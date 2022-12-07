@@ -1,5 +1,6 @@
 ##################################################
-## Data preprocessing pipeline for the XGB tuning
+## Data preprocessing pipeline for the GBR tuning
+##################################################
 
 from textblob import TextBlob
 from textblob_fr import PatternTagger, PatternAnalyzer

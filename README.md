@@ -15,7 +15,11 @@ In this section we explain all the code scripts that were use to experiment vari
     - **./baseline-models**
     Evaluation and training of all baseline models reported in section *3.2* of our report. For each model, there exists a given script to train the given model with the default model parameters after applying our feature engineering pipeline to the training and test set. 
     - **./grb-tuning**
-    Hypertuning the XGB regressor including the according data pipeline.
+    Hypertuning the Gradient Boosting regressor including the according data pipeline.
+    - **./rfr-tuning**
+    Hypertuning the Random Forest regressor including the according data pipeline.
+    - **./xgb-tuning**
+    Hypertuning the XG Boosting regressor including the according data pipeline.
     - ***correlation.py***
     A script to plot all the correlation plots and correlation matrices of the original and engineered features
     - ***normalisation.py***
