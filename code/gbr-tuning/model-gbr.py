@@ -7,7 +7,15 @@ import pandas as pd
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error
 from verstack.stratified_continuous_split import scsplit # pip install verstack
+from sklearn.model_selection import GridSearchCV
 from pipeline_gbr import featurePipeline
+
+# finetuning parameters 
+parameters = {'learning_rate': [0.01,0.02,0.03,0.04],
+				'subsample'    : [0.9, 0.5, 0.2, 0.1],
+				'n_estimators' : [100,500,1000],
+				'max_depth'    : [4,6,8,10]
+				}
 
 if __name__ == "__main__":
 	# Load the training data
@@ -21,37 +29,13 @@ if __name__ == "__main__":
 
 	X_train, X_test = featurePipeline(X_train, X_test, True)
 
-	print(X_train)
-
 	# Now we can train our model. Here we chose a Gradient Boosting Regressor and we set our loss function 
-	reg = GradientBoostingRegressor()
-	
+	reg = GradientBoostingRegressor(random_state=0)
+	clf = GridSearchCV(reg, parameters, verbose=3, scoring="neg_mean_absolute_error", cv=2, refit=True, return_train_score=True, n_jobs=-1, pre_dispatch='1.5*n_jobs')
+
 	# We fit our model using the training data
-	reg.fit(X_train, y_train)
-	# And then we predict the values for our testing set
-	y_pred = reg.predict(X_test)
-	# We want to make sure that all predictions are non-negative integers
-	y_pred = [int(value) if value >= 0 else 0 for value in y_pred]
-
-	print("Test Prediction error:", mean_absolute_error(y_true=y_test, y_pred=y_pred))
-
-
-	# Prediction on the evaluation dataset
-	# Load the evaluation data
-	eval_data = pd.read_csv("../../data/evaluation.csv")
-	# Pipe the evaluation data through the dataset
-	tweetID = eval_data['TweetID']
-	eval_data, _ = featurePipeline(eval_data, None, False)
-
-	# And then we predict the values for our testing set
-	y_pred = reg.predict(eval_data)
-
-	# We want to make sure that all predictions are non-negative integers
-	y_pred = [int(value) if value >= 0 else 0 for value in y_pred]
-
-	# Dump the results into a file that follows the required Kaggle template
-	with open("../../results/predictions-gbr.txt", 'w') as f:
-		writer = csv.writer(f)
-		writer.writerow(["TweetID", "retweets_count"])
-		for index, prediction in enumerate(y_pred):
-			writer.writerow([str(tweetID.iloc[index]) , str(int(prediction))])	
+	clf.fit(X_train, y_train)
+	# Print the results of the grid search
+	print(clf.cv_results_)
+	print("The best parameters are, \n")
+	print(clf.best_params_)
