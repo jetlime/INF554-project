@@ -46,9 +46,6 @@ def plot_history(history, key):
   plt.legend([key, 'val_'+key])
   plt.show()
 
-# Plot the history
-plot_history(history, 'mean_squared_logarithmic_error')
-
 if __name__ == "__main__":
 	# Load the training data
 	train_data = pd.read_csv("../../data/train.csv")
@@ -61,26 +58,30 @@ if __name__ == "__main__":
 
 	X_train, X_test = featurePipeline(X_train, X_test, True)
 
+	X_test = tf.convert_to_tensor(X_test)
+	X_train = tf.convert_to_tensor(X_train)
+
 	print(X_train)
 
 	# build the model
 	model = build_model_using_sequential()
 
 	# loss function
-	mse = mean_absolute_error()
+	mse = mean_absolute_error
 	model.compile(
 		loss=mse, 
 		optimizer=Adam(learning_rate=learning_rate), 
 		metrics=[mse]
 	)
-	# train the model
-	history = model.fit(
-		x_train_scaled.values, 
-		y_train.values, 
-		epochs=10, 
-		batch_size=64,
-		validation_split=0.2, verbose=2
-	)
+	with tf.device("/GPU:0"):
+		# train the model
+		history = model.fit(
+			X_train.values, 
+			y_train.values, 
+			epochs=10, 
+			batch_size=64,
+			validation_split=0.2, verbose=2
+		)
 
 	y_pred = model.predict(X_test)
 	# We want to make sure that all predictions are non-negative integers
