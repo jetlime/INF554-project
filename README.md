@@ -4,6 +4,8 @@
 
 ## Reproduce our Results
 In this section we present  and explain how to execute our code in order to reproduce our obtained results. In order to make our results reproducable, we set a fixed random set and specify the exact versions of the used python libraries (see the file ```requirements.txt``` in the root folder).  
+1. Download all the required packets with the correct versionning
+2. Run ```python3 final-model.py``` while being in the code directory
 ## Folders and Experimental scripts
 In this section we explain all the code scripts that were use to experiment various hypothesis.
 - **./code**
@@ -32,5 +34,4 @@ In this section we explain all the code scripts that were use to experiment vari
         - ***normalisation.py***
         A script to inspect the data distribution of certain features and the effect of given normalisation techniques. 
 - **./figs**
-- **./models**
-- **./results**
+All images generated for our report and our experiments. 
