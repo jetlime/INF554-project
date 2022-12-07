@@ -1,28 +1,53 @@
 ##################################################
-## A script to train an hypertune the RFR regressor 
+## A script to train and evaluate the baseline NN regressor 
 ##################################################
+
 import csv
 import pandas as pd
-import numpy as np
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error, make_scorer
+from sklearn.metrics import mean_absolute_error
 from verstack.stratified_continuous_split import scsplit # pip install verstack
-from sklearn.model_selection import GridSearchCV
+from nltk.corpus import stopwords 
 from pipeline_nn import featurePipeline
 
-parameters = {
-	# Number of trees in the forest
-    'n_estimators': [100, 150, 200, 250, 300],
-	#'n_estimators': [100, 150]
-	# maimum number of levels in each decision tree
-    'max_depth': [int(x) for x in np.linspace(1, 110, num = 11)],
-	# maimum number of features considered for splitting a node (auto: same as #features ; sqrt: sqrt(#features))
-	'max_features': ['auto', 'sqrt'],
-	# Method of selecting samples for training each tree
-	'bootstrap' : [True, False],
-	# The minimum number of samples required to split an internal node
-	'min_samples_split' : [2, 5, 10]
-}
+import math
+import tensorflow as tf
+import matplotlib.pyplot as plt
+from tensorflow.keras import Model
+from tensorflow.keras import Sequential
+from tensorflow.keras.optimizers import Adam
+from sklearn.preprocessing import StandardScaler
+from tensorflow.keras.layers import Dense, Dropout
+from sklearn.model_selection import train_test_split
+from tensorflow.keras.losses import MeanSquaredLogarithmicError
+
+hidden_units1 = 160
+hidden_units2 = 480
+hidden_units3 = 256
+learning_rate = 0.01
+
+def build_model_using_sequential():
+  model = Sequential([
+    Dense(hidden_units1, kernel_initializer='normal', activation='relu'),
+    Dropout(0.2),
+    Dense(hidden_units2, kernel_initializer='normal', activation='relu'),
+    Dropout(0.2),
+    Dense(hidden_units3, kernel_initializer='normal', activation='relu'),
+    Dense(1, kernel_initializer='normal', activation='linear')
+  ])
+  return model
+
+
+def plot_history(history, key):
+  plt.plot(history.history[key])
+  plt.plot(history.history['val_'+key])
+  plt.xlabel("Epochs")
+  plt.ylabel(key)
+  plt.legend([key, 'val_'+key])
+  plt.show()
+
+# Plot the history
+plot_history(history, 'mean_squared_logarithmic_error')
 
 if __name__ == "__main__":
 	# Load the training data
@@ -32,23 +57,54 @@ if __name__ == "__main__":
 
 	# Here we split our training data into trainig and testing set. This way we can estimate the evaluation of our model without uploading to Kaggle and avoid overfitting over our evaluation dataset.
 	# scsplit method is used in order to split our regression data in a stratisfied way and keep a similar distribution of retweet counts between the two sets
-	X_train, X_test, y_train, y_test = scsplit(train_data, train_data['retweets_count'], stratify=train_data['retweets_count'], train_size=0.8, test_size=0.2)
+	X_train, X_test, y_train, y_test = scsplit(train_data, train_data['retweets_count'], stratify=train_data['retweets_count'], train_size=0.7, test_size=0.3)
 
 	X_train, X_test = featurePipeline(X_train, X_test, True)
-	X_train.to_csv('x_train.csv', index=False)
-	X_test.to_csv('x_test.csv', index=False)
-
-	#X_train = pd.read_csv("x_train.csv")
-	#X_test = pd.read_csv("x_test.csv")
 
 	print(X_train)
 
-	# Now we can train our model. Here we chose a Gradient Boosting Regressor and we set our loss function 
-	reg = RandomForestRegressor(random_state=0, n_jobs=-1)
-	clf = GridSearchCV(reg, parameters, verbose=3, scoring="neg_mean_absolute_error", cv=2, refit=True, return_train_score=True)
-	# We fit our model using the training data
-	clf.fit(X_train, y_train)
-	# Print the results of the grid search
-	print(clf.cv_results_)
-	print("The best parameters are, \n")
-	print(clf.best_params_)
+	# build the model
+	model = build_model_using_sequential()
+
+	# loss function
+	mse = mean_absolute_error()
+	model.compile(
+		loss=mse, 
+		optimizer=Adam(learning_rate=learning_rate), 
+		metrics=[mse]
+	)
+	# train the model
+	history = model.fit(
+		x_train_scaled.values, 
+		y_train.values, 
+		epochs=10, 
+		batch_size=64,
+		validation_split=0.2, verbose=2
+	)
+
+	y_pred = model.predict(X_test)
+	# We want to make sure that all predictions are non-negative integers
+	y_pred = [int(value) if value >= 0 else 0 for value in y_pred]
+
+	print("Test Prediction error:", mean_absolute_error(y_true=y_test, y_pred=y_pred))
+
+
+	# Prediction on the evaluation dataset
+	# Load the evaluation data
+	eval_data = pd.read_csv("../../data/evaluation.csv")
+	# Pipe the evaluation data through the dataset
+	tweetID = eval_data['TweetID']
+	eval_data, _ = featurePipeline(eval_data, None, False)
+
+	# And then we predict the values for our testing set
+	y_pred = reg.predict(eval_data)
+
+	# We want to make sure that all predictions are non-negative integers
+	y_pred = [int(value) if value >= 0 else 0 for value in y_pred]
+
+	# Dump the results into a file that follows the required Kaggle template
+	with open("../../results/predictions-rfr.txt", 'w') as f:
+		writer = csv.writer(f)
+		writer.writerow(["TweetID", "retweets_count"])
+		for index, prediction in enumerate(y_pred):
+			writer.writerow([str(tweetID.iloc[index]) , str(int(prediction))])	
