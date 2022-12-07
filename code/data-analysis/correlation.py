@@ -22,9 +22,9 @@ from nltk.corpus import stopwords
 from pipeline import featurePipeline
 
 # Load the training data
-train_data = pd.read_csv("../data/train.csv", index_col=False)
+train_data = pd.read_csv("../../data/train.csv", index_col=False)
 train_data_engineered, _ = featurePipeline(train_data, None, False)
-train_data = pd.read_csv("../data/train.csv", index_col=False)
+train_data = pd.read_csv("../../data/train.csv", index_col=False)
 # COMPUTE CORRELATION MATRIX 
 
 # run correlation matrix and plot
@@ -34,7 +34,7 @@ sns.heatmap(corr,annot=True, mask=np.zeros_like(corr, dtype=np.bool),
             cmap=sns.diverging_palette(220, 10, as_cmap=True),
             square=True, ax=ax)
 f.suptitle('Correlation Matrix between features in the orginal Dataset', fontsize=16)
-plt.savefig('../figs/correlation-original/correlation-matrix.png')
+plt.savefig('../../figs/correlation-original/correlation-matrix.png')
 
 # run correlation matrix and plot on the engineered features
 
@@ -44,7 +44,7 @@ sns.heatmap(corr,annot=True, mask=np.zeros_like(corr, dtype=np.bool),
             cmap=sns.diverging_palette(220, 10, as_cmap=True),
             square=True, ax=ax)
 f.suptitle('Correlation Matrix between features after Feature Engineering', fontsize=16)
-plt.savefig('../figs/correlation-engineered/correlation-matrix.png')
+plt.savefig('../../figs/correlation-engineered/correlation-matrix.png')
 
 fig = plt.figure(figsize=(15,6))
 i = 1
@@ -66,7 +66,7 @@ for name, values in train_data.iteritems():
 
 fig.legend(shadow=True, loc="lower right")
 print("SAVING FILE...")
-filename  = "../figs/correlation-original/correlation-plotting.png"
+filename  = "../../figs/correlation-original/correlation-plotting.png"
 plt.tight_layout()
 plt.savefig(filename)
 plt.close("all")
@@ -92,7 +92,7 @@ for name, values in train_data_engineered.iteritems():
 
 fig.legend(shadow=True, loc="lower right")
 print("SAVING FILE...")
-filename  = "../figs/correlation-engineered/correlation-engineered.png"
+filename  = "../../figs/correlation-engineered/correlation-engineered.png"
 plt.tight_layout()
 plt.savefig(filename)
 plt.close("all")
@@ -102,4 +102,4 @@ plt.close("all")
 f, ax = plt.subplots(figsize=(10, 10))
 sns.lmplot(x='followers_count', y='retweets_count', data=train_data_engineered)
 f.suptitle('Correlation Matrix between features in the orginal Dataset', fontsize=16)
-plt.savefig('../figs/correlation-original/correlation-matrix.png')
+plt.savefig('../../figs/correlation-original/correlation-matrix.png')
