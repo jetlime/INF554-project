@@ -1,32 +1,21 @@
 ##################################################
-## A script to train to hypertune the XGBoost
-## regressor 
-##################################################
-## Author: Paul Houssel
-## Last Updated: Nov 19 2022, 22:56
+## A script to train and hypertune the XGBoost regressor 
 ##################################################
 
 import csv
 import pickle
 import pandas as pd
-from sklearn.linear_model import BayesianRidge
 from sklearn.metrics import mean_absolute_error
 from verstack.stratified_continuous_split import scsplit # pip install verstack
-from nltk.corpus import stopwords 
 from xgboost import XGBRegressor
-
-from nltk import download
-from sklearn.gaussian_process import GaussianProcessRegressor as GPR
-
-from pipeline import featurePipeline
-
+from pipeline_xgb import featurePipeline
 
 # Hypertuning parameters
 boosters = ["gbtree"] #, "dart"] #"gblinear", "dart"]
 
 if __name__ == "__main__":
 	# Load the training data
-	train_data = pd.read_csv("../data/train.csv")
+	train_data = pd.read_csv("../../data/train.csv")
 
 	pd.set_option('display.max_columns', 1000)
 
@@ -66,7 +55,7 @@ if __name__ == "__main__":
                     xgb_model=reg)
 
 			# Save the model as a pickle file
-			with open("../models/xgboost-{}-{}".format(booster, str(i)), 'wb') as file:
+			with open("../../models/xgboost-{}-{}".format(booster, str(i)), 'wb') as file:
 				pickle.dump(reg, file)
 
 			y_ctrl = reg.predict(X_train)

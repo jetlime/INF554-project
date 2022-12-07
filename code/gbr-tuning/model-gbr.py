@@ -1,30 +1,17 @@
 ##################################################
 ## A script to train to hypertune the GBR regressor 
 ##################################################
-## Author: Paul Houssel
-## Last Updated: Nov 19 2022, 21:23
-##################################################
 
 import csv
 import pandas as pd
 from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.dummy import DummyRegressor
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import mean_absolute_error
 from verstack.stratified_continuous_split import scsplit # pip install verstack
-from nltk.corpus import stopwords 
-
-
-
-from nltk import download
-from sklearn.gaussian_process import GaussianProcessRegressor as GPR
-
-from pipeline import featurePipeline
-
+from pipeline_gbr import featurePipeline
 
 if __name__ == "__main__":
 	# Load the training data
-	train_data = pd.read_csv("../data/train.csv")
+	train_data = pd.read_csv("../../data/train.csv")
 
 	pd.set_option('display.max_columns', 1000)
 
@@ -51,7 +38,7 @@ if __name__ == "__main__":
 
 	# Prediction on the evaluation dataset
 	# Load the evaluation data
-	eval_data = pd.read_csv("../data/evaluation.csv")
+	eval_data = pd.read_csv("../../data/evaluation.csv")
 	# Pipe the evaluation data through the dataset
 	tweetID = eval_data['TweetID']
 	eval_data, _ = featurePipeline(eval_data, None, False)
@@ -63,7 +50,7 @@ if __name__ == "__main__":
 	y_pred = [int(value) if value >= 0 else 0 for value in y_pred]
 
 	# Dump the results into a file that follows the required Kaggle template
-	with open("../results/predictions-gbr.txt", 'w') as f:
+	with open("../../results/predictions-gbr.txt", 'w') as f:
 		writer = csv.writer(f)
 		writer.writerow(["TweetID", "retweets_count"])
 		for index, prediction in enumerate(y_pred):
