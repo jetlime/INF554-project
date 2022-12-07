@@ -40,7 +40,6 @@ if __name__ == "__main__":
 
 	#X_train = pd.read_csv("x_train.csv")
 	#X_test = pd.read_csv("x_test.csv")
-
 	print(X_train)
 
 	# Now we can train our model. Here we chose a Gradient Boosting Regressor and we set our loss function 
